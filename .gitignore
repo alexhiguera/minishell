@@ -6,6 +6,7 @@
 *.ko
 *.obj
 *.elf
+bin/
 
 # Linker output
 *.ilk
@@ -50,3 +51,9 @@ modules.order
 Module.symvers
 Mkfile.old
 dkms.conf
+
+#dev files
+pipo
+*.out
+aout
+out
