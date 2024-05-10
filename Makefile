@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: alex <alex@student.42.fr>                  +#+  +:+       +#+         #
+#    By: columbux <columbux@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/03 19:29:16 by alex              #+#    #+#              #
-#    Updated: 2024/04/03 19:43:15 by alex             ###   ########.fr        #
+#    Updated: 2024/05/11 00:14:14 by columbux         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -30,21 +30,25 @@ WHITE 			=	\033[0;97m
 
 #█████████████████████████████ SOURCES █████████████████████████████████████████#
 
-SRC 		:= 	
+LIBFT		:=	libft/
+SRC 		:= 	src/minishell.c
 
 #████████████████████████████ Rules ████████████████████████████████████████████#
 
 all:$(NAME)
 
 $(NAME): 	$(SRC)
-				@echo "$(CYAN)Compiling $(NAME)...$(WHITE)\n"
-				@$(CC) $(CFLAGS) -o $(NAME)
-				@echo "$(GREEN)Minishell compiled! 🚀$(WHITE)\n"
+				@echo "$(CYAN)Compiling $(NAME)...$(WHITE)"
+				@make re -C $(LIBFT) -s
+				@$(CC) $(CFLAGS) $(SRC) $(LIBFT)/libft.a -o $(NAME)
+				@echo "$(GREEN)$(NAME) compiled! 🚀$(WHITE)\n"
 
 clean:
+				@make -C $(LIBFT) clean -s
 
 fclean: 	clean
 				@rm -rf $(NAME)
+				@make -C $(LIBFT) fclean -s
 
 re: 		fclean all
 

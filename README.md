@@ -20,7 +20,13 @@ Once compiled, run the program, and you can interact with the window using the k
 ```bash
 git clone https://github.com/alexhiguera/minishell.git
 ```
-2. Run the compilation command to generate the executable and run game:
+
+2. Including dependencies
+```bash
+git submodule init
+git submodule update
+```
+3. Run the compilation command to generate the executable and run program:
 ```bash
 make run
 ```

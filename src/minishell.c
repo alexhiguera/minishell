@@ -1,18 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.h                                        :+:      :+:    :+:   */
+/*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: columbux <columbux@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/04/03 19:44:42 by alex              #+#    #+#             */
-/*   Updated: 2024/05/09 17:37:30 by columbux         ###   ########.fr       */
+/*   Created: 2024/05/09 17:11:35 by ahigura           #+#    #+#             */
+/*   Updated: 2024/05/10 11:05:34 by columbux         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MINISHELL_H
-# define MINISHELL_H
+#include "minishell.h"
 
-# include "../libft/src/libft.h"
-
-#endif
+int	main(void)
+{
+	while (true)
+	{
+		ft_printf("minishell/> ");
+		scanf(" ");
+	}
+	return (0);
+}
