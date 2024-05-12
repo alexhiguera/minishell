@@ -5,8 +5,8 @@
 #                                                     +:+ +:+         +:+      #
 #    By: columbux <columbux@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2024/04/03 19:29:16 by alex              #+#    #+#              #
-#    Updated: 2024/05/11 00:14:14 by columbux         ###   ########.fr        #
+#    Created: 2024/04/03 19:29:16 by ahiguera          #+#    #+#              #
+#    Updated: 2024/05/12 21:29:53 by columbux         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,6 +15,7 @@
 NAME			:= minishell
 CC				:= gcc
 CFLAGS			:= -Wall -Wextra -Werror
+AUXFLAGS		:= -lreadline
 
 #██████████████████████████████ Colors ████████████████████████████████████████#
 
@@ -40,7 +41,7 @@ all:$(NAME)
 $(NAME): 	$(SRC)
 				@echo "$(CYAN)Compiling $(NAME)...$(WHITE)"
 				@make re -C $(LIBFT) -s
-				@$(CC) $(CFLAGS) $(SRC) $(LIBFT)/libft.a -o $(NAME)
+				@$(CC) $(CFLAGS) $(SRC) $(LIBFT)/libft.a -o $(NAME) $(AUXFLAGS)
 				@echo "$(GREEN)$(NAME) compiled! 🚀$(WHITE)\n"
 
 clean:
