@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   04_checker_setup.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*   By: alex <alex@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 12:06:19 by codespace         #+#    #+#             */
-/*   Updated: 2024/09/11 12:06:32 by codespace        ###   ########.fr       */
+/*   Updated: 2024/09/12 18:25:46 by alex             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-t_checker  *ft_setup_checker(char **input)
+t_checker	*ft_setup_checker(char **input)
 {
 	t_checker	*checker;
 	t_checker	*next_checker;
@@ -34,55 +34,54 @@ t_checker  *ft_setup_checker(char **input)
 
 t_checker	*ft_create_node(char *input, int idx)
 {
-    t_checker *new_node;
+	t_checker	*new_node;
 
-    new_node = (t_checker *)malloc(sizeof(t_checker));
-    if (!new_node)
-        return (NULL);
-    new_node->data = strdup(input);
-    if (!new_node->data)
-    {
-        free(new_node);
-        return (NULL);
-    }
-    new_node->prev = NULL;
-    new_node->next = NULL;
-    new_node->data_type = ft_datatype(input);
-    new_node->pos = idx;
-
-    return (new_node);
+	new_node = (t_checker *)malloc(sizeof(t_checker));
+	if (!new_node)
+		return (NULL);
+	new_node->data = ft_strdup(input);
+	if (!new_node->data)
+	{
+		free(new_node);
+		return (NULL);
+	}
+	new_node->prev = NULL;
+	new_node->next = NULL;
+	new_node->data_type = ft_datatype(input);
+	new_node->pos = idx;
+	return (new_node);
 }
 
 void	ft_append_end(t_checker **checks, t_checker *new_node)
 {
-    t_checker *last;
+	t_checker	last;
 
-    if (!new_node)
-        return;
-    if (*checks == NULL)
-    {
-        *checks = new_node;
-        return;
-    }
-    last = *checks;
-    while (last->next != NULL)
-        last = last->next;
-    last->next = new_node;
-    new_node->prev = last;
+	if (!new_node)
+		return ;
+	if (*checks == NULL)
+	{
+		*checks = new_node;
+		return ;
+	}
+	last = *checks;
+	while (last->next != NULL)
+		last = last->next;
+	last->next = new_node;
+	new_node->prev = last;
 }
 
-int ft_datatype(char *input)
+int	ft_datatype(char *input)
 {
-    if (ft_is_cmd(input) == 1)
-        return (1);
-    else if (input[0] == '|' && !input[1])
-        return (2);
-    else if (access(input, R_OK) == 0)
-        return (3);
-    else if (input[0] == '-' && input[1])
-        return (4);
-    else if (input[0] == '<' || input[0] == '>')
-        return (5);
-    else
-        return (6);
+	if (ft_is_cmd(input) == 1)
+		return (1);
+	else if (input[0] == '|' && !input[1])
+		return (2);
+	else if (access(input, R_OK) == 0)
+		return (3);
+	else if (input[0] == '-' && input[1])
+		return (4);
+	else if (input[0] == '<' || input[0] == '>')
+		return (5);
+	else
+		return (6);
 }

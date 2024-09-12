@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   06_init_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*   By: alex <alex@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 12:07:15 by codespace         #+#    #+#             */
-/*   Updated: 2024/09/11 12:07:21 by codespace        ###   ########.fr       */
+/*   Updated: 2024/09/12 18:27:26 by alex             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ void	ft_print_checker(t_checker *checker)
 
 void	ft_free_checker(t_checker *checker)
 {
-	t_checker *temp;
+	t_checker	*temp;
 
 	while (checker != NULL)
 	{

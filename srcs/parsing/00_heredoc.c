@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   00_heredoc.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*   By: alex <alex@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 12:04:49 by codespace         #+#    #+#             */
-/*   Updated: 2024/09/11 12:33:23 by codespace        ###   ########.fr       */
+/*   Updated: 2024/09/12 18:20:05 by alex             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,8 +64,8 @@ char	*ft_append_input(char *pre_input, char *hd_input)
 	int		len_pre;
 	int		len_hd;
 
-	len_pre = strlen(pre_input);
-	len_hd = strlen(hd_input);
+	len_pre = ft_strlen(pre_input);
+	len_hd = ft_strlen(hd_input);
 	new_input = realloc(pre_input, len_pre + len_hd + 1);
 	strcat(new_input, hd_input);
 	return (new_input);

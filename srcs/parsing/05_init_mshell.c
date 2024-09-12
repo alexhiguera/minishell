@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   05_init_mshell.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*   By: alex <alex@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 12:06:57 by codespace         #+#    #+#             */
-/*   Updated: 2024/09/11 12:07:06 by codespace        ###   ########.fr       */
+/*   Updated: 2024/09/12 18:27:13 by alex             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void	ft_init_minishell(char *input, char **envp)
 	if (ft_check_input(checker) == 1)
 		ft_init_execution(input, envp);
 	else
-		printf("Syntax Error.\n");
+		ft_printf("Syntax Error.\n");
 	ft_free_checker(checker);
 	return ;
 }
@@ -46,18 +46,19 @@ int	ft_checks_00(t_checker *checker)
 	{
 		if (curr->data_type == 2 && (!curr->next || !curr->prev))
 			return (0);
-		else if (curr->prev && curr->data_type == 4 && curr->prev->data_type != 1)
+		else if (curr->prev && curr->data_type == 4 && \
+			curr->prev->data_type != 1)
 			return (0);
-        else if (curr->data_type == 2 && curr->next->data_type == 2)
-            return (0);
-        else if (curr->data_type == 4 && curr->next->data_type == 4)
-            return (0);
-        else if (curr == checker && curr->data_type == 2)
-            return (0);
-        else if (curr->next == NULL && curr->data_type == 2)
-            return (0);
+		else if (curr->data_type == 2 && curr->next->data_type == 2)
+			return (0);
+		else if (curr->data_type == 4 && curr->next->data_type == 4)
+			return (0);
+		else if (curr == checker && curr->data_type == 2)
+			return (0);
+		else if (curr->next == NULL && curr->data_type == 2)
+			return (0);
 		if (curr->next)
-			curr = curr->next;		
+			curr = curr->next;
 	}
 	return (1);
 }
@@ -69,7 +70,7 @@ int	ft_checks_01(t_checker *checker)
 	int			redir_count;
 	int			arch_count;
 	t_checker	*curr;
-	
+
 	arch_count = 0;
 	redir_count = 0;
 	cmd_count = 0;

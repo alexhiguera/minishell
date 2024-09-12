@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   02_dollar_exp.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*   By: alex <alex@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 12:05:39 by codespace         #+#    #+#             */
-/*   Updated: 2024/09/11 12:05:51 by codespace        ###   ########.fr       */
+/*   Updated: 2024/09/12 18:22:46 by alex             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,8 @@ int	ft_var_len(char *input, int idx)
 	int	var_len;
 
 	var_len = 1;
-	while (input[idx + var_len] != ' ' && input[idx + var_len] != '"' && input[idx + var_len] &&
-		input[idx + var_len] != '$')
+	while (input[idx + var_len] != ' ' && input[idx + var_len] != '"' \
+		&& input[idx + var_len] && input[idx + var_len] != '$')
 		var_len++;
 	return (var_len);
 }
@@ -37,7 +37,7 @@ int	ft_var_newlen(char *input)
 		if (input[idx] == '$')
 		{
 			var_len = ft_var_len(input, ++idx);	
-			var_name = strndup(&input[idx], var_len);
+			var_name = ft_strndup(&input[idx], var_len);
 			var_value = getenv(var_name);
 			free(var_name);
 			new_len += strlen(var_value);
@@ -56,7 +56,7 @@ int	ft_cpy_value(char **input, char *new_input, int *idx, int idy)
 	char	*var_value;
 
 	var_len = ft_var_len(*input, *idx);
-	var_name = strndup(&(*input)[*idx + 1], var_len - 1);
+	var_name = ft_strndup(&(*input)[*idx + 1], var_len - 1);
 	if (!var_name)
 		return (-1);
 	var_value = getenv(var_name);
@@ -67,7 +67,7 @@ int	ft_cpy_value(char **input, char *new_input, int *idx, int idy)
 	return (idy);
 }
 
-void ft_new_input(char **input, int new_len)
+void	ft_new_input(char **input, int new_len)
 {
 	char	*new_input;
 	int		idx;
@@ -75,7 +75,7 @@ void ft_new_input(char **input, int new_len)
 
 	new_input = (char *)malloc(sizeof(char) * (new_len) + 1);
 	if (!new_input)
-		return;
+		return ;
 	idx = 0;
 	idy = 0;
 	while ((*input)[idx])
