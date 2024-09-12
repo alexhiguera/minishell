@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: alex <alex@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/08/21 14:49:15 by user              #+#    #+#             */
-/*   Updated: 2024/09/12 15:03:25 by alex             ###   ########.fr       */
+/*   Created: 2024/08/21 14:49:15 by alex              #+#    #+#             */
+/*   Updated: 2024/09/12 16:02:51 by alex             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,9 @@
 # include <sys/stat.h> 				//S_ISDIR
 # include <readline/readline.h> 	// Readline
 # include <readline/history.h> 		// History
+
+# include <string.h>
+# include <ctype.h>
 
 typedef struct s_checker
 {

@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   02_export.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
+/*   By: alex <alex@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 12:09:30 by codespace         #+#    #+#             */
-/*   Updated: 2024/09/11 15:42:57 by codespace        ###   ########.fr       */
+/*   Updated: 2024/09/12 15:53:01 by alex             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int ft_export(char *input, char **envp)
+int	ft_export(char *input, char **envp)
 {
 	char	*token;
 	char	*name;
