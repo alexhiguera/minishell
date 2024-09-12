@@ -10,11 +10,14 @@
 #                                                                              #
 # **************************************************************************** #
 
+#████████████████████████████ Configuration ███████████████████████████████████#
 
-NAME    = minishell
-CC      = gcc
-CFLAGS  = -Wall -Werror -Wextra -fsanitize=address -g3
-LDFLAGS = -lreadline
+NAME    	:= minishell
+CC      	:= gcc
+CFLAGS  	:= -Wall -Werror -Wextra -fsanitize=address -g3
+LDFLAGS 	:= -lreadline
+
+#█████████████████████████████ SOURCES █████████████████████████████████████████#
 
 SRCS		=	built_ins/00_echo.c				built_ins/01_cd.c				\
 				built_ins/02_export.c			built_ins/03_unset.c			\
@@ -24,28 +27,44 @@ SRCS		=	built_ins/00_echo.c				built_ins/01_cd.c				\
 				parsing/02_dollar_exp.c			parsing/03_builtins.c			\
 				parsing/04_checker_setup.c		parsing/05_init_mshell.c		\
 				parsing/06_init_utils.c			parsing/07_execution.c			\
-				parsing/08_exec_setup.c		parsing/09_exec_utils.c			\
+				parsing/08_exec_setup.c			parsing/09_exec_utils.c			\
 				parsing/10_signals.c											\
 																				\
 				utils/00_dollar_utils.c			utils/01_libft_00.c				\
-				utils/02_libft_01.c		utils/03_libft_02.c				\
+				utils/02_libft_01.c				utils/03_libft_02.c				\
 																				\
 				main.c
 
+#████████████████████████████ Rules ████████████████████████████████████████████#
+
+all:		$(NAME)
+
 OBJ     = $(SRCS:.c=.o)
 
-$(NAME): $(OBJ)
-	@$(CC) $(CFLAGS) -o $(NAME) $(OBJ) $(LDFLAGS)
+$(NAME):	$(OBJ)
+				@$(CC) $(CFLAGS) -o $(NAME) $(OBJ) $(LDFLAGS)
 
 %.o: %.c
-	@$(CC) $(CFLAGS) -c $< -o $@
+				@$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	@rm -f $(OBJ)
+				@rm -f $(OBJ)
 
-fclean: clean
-	@rm -f $(NAME)
+fclean: 	clean
+				@rm -f $(NAME)
 
-re: fclean $(NAME)
+re: 		fclean $(NAME)
 
-.phony:	clean fclean re
+.PHONY:		all clean fclean re
+
+#█████████████████████████████ Custom rules ████████████████████████████████████#
+
+normi:
+				@echo "Norminette...\n"
+				@norminette $(SRC)
+				@echo "nNorminette Done!\n"
+
+run:
+				clear
+				@make re
+				@./minishell
