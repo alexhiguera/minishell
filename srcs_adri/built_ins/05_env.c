@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   05_env.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: user <user@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/08/23 10:43:20 by user              #+#    #+#             */
-/*   Updated: 2024/08/23 10:44:02 by user             ###   ########.fr       */
+/*   Created: 2024/09/11 12:10:04 by codespace         #+#    #+#             */
+/*   Updated: 2024/09/11 12:39:22 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,11 @@
 
 int	ft_env(char *input, char **envp)
 {
-	printf("env built in.\n");
 	(void)input;
-	(void)envp;
+	while (*envp)
+	{
+		printf("%s\n", *envp);
+		envp++;
+	}
 	return (1);
 }

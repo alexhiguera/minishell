@@ -1,27 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   04_pwd.c                                           :+:      :+:    :+:   */
+/*   10_signals.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/11 12:09:54 by codespace         #+#    #+#             */
-/*   Updated: 2024/09/11 12:39:14 by codespace        ###   ########.fr       */
+/*   Created: 2024/09/11 12:08:37 by codespace         #+#    #+#             */
+/*   Updated: 2024/09/11 12:08:38 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int	ft_pwd(char *input, char **envp)
+void	ft_signal_handler(void)
 {
-	char	*pwd;
+	signal(SIGINT, sigint_handler);
+	signal(SIGQUIT, sigquit_handler);
+}
 
-	(void)envp;
-	(void)input;
-	pwd = getenv("PWD");
-	if (pwd)
-		printf("%s\n", pwd);
-	else
-		printf("\n");
-	return (1);
+void	sigquit_handler(int sig)
+{
+	(void)sig;
+}
+
+void	sigint_handler(int sig)
+{
+	(void)sig;
+	write(1, "\n", 1);
+	rl_on_new_line();
+	rl_replace_line("", 0);
+	rl_redisplay();
 }

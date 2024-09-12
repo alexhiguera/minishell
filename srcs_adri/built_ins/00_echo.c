@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   00_echo.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: user <user@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/08/23 10:38:42 by user              #+#    #+#             */
-/*   Updated: 2024/08/23 10:40:40 by user             ###   ########.fr       */
+/*   Created: 2024/09/11 12:08:58 by codespace         #+#    #+#             */
+/*   Updated: 2024/09/11 12:39:01 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,26 @@
 
 int	ft_echo(char *input)
 {
-	printf("echo built in.\n");
-	(void)input;
+	int	idx;
+	int	flag;
+	int	idk;
+
+	flag = 1;
+	idx = 0;
+	idk = 0;
+	while (input[idx])
+	{
+		if (input[idx] == '-' && input[idx + 1] == 'n')
+			flag = 0;
+		idx++;
+	}
+	if (flag == 0)
+		idx = 7;
+	else
+		idx = 4;
+	while (input[idx + 1] != '\0')
+		idk = write(1, &input[++idx], 1);
+	if (flag == 1 && idk)
+		printf("\n");
 	return (1);
 }

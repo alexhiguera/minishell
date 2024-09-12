@@ -3,19 +3,37 @@
 /*                                                        :::      ::::::::   */
 /*   03_unset.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: user <user@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: codespace <codespace@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/08/23 10:41:33 by user              #+#    #+#             */
-/*   Updated: 2024/08/23 10:42:16 by user             ###   ########.fr       */
+/*   Created: 2024/09/11 12:09:41 by codespace         #+#    #+#             */
+/*   Updated: 2024/09/11 15:39:34 by codespace        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int	ft_unset(char *input, char **envp)
+int ft_unset(char *input, char **envp, int len)
 {
-	printf("unset built in.\n");
-	(void)input;
-	(void)envp;
-	return (1);
+    char    **splt_input;
+    char    *var;
+
+    if (len == 5 || len == 6)
+        return (1);
+    splt_input = ft_split(input, ' ');
+    var = splt_input[1];
+    while (*envp)
+    {
+        if (ft_strncmp(*envp, var, strlen(var)) == 0)
+        {
+            while (*envp)
+            {
+                *envp = *(envp + 1);
+                envp++;
+            }
+            break ;
+        }
+        envp++;
+    }
+    ft_free_spltinput(splt_input);
+    return (1);
 }
