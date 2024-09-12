@@ -3,66 +3,71 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: columbux <columbux@student.42.fr>          +#+  +:+       +#+         #
+#    By: alex <alex@student.42.fr>                  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/04/03 19:29:16 by ahiguera          #+#    #+#              #
-#    Updated: 2024/05/12 21:29:53 by columbux         ###   ########.fr        #
+#    Updated: 2024/09/12 15:20:36 by alex             ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 #████████████████████████████ Configuration ███████████████████████████████████#
 
-NAME			:= minishell
-CC				:= gcc
-CFLAGS			:= -Wall -Wextra -Werror
-AUXFLAGS		:= -lreadline
-
-#██████████████████████████████ Colors ████████████████████████████████████████#
-
-DEF_COLOR 		=	\033[0;39m
-GRAY 			=	\033[0;90m
-RED 			=	\033[0;91m
-GREEN 			=	\033[0;92m
-YELLOW 			=	\033[0;93m
-BLUE 			=	\033[0;94m
-MAGENTA 		=	\033[0;95m
-CYAN 			=	\033[0;96m
-WHITE 			=	\033[0;97m
+NAME    	:= minishell
+CC      	:= gcc
+CFLAGS  	:= -Wall -Werror -Wextra -fsanitize=address -g3
+LDFLAGS 	:= -lreadline
 
 #█████████████████████████████ SOURCES █████████████████████████████████████████#
+DIR_BUILTINS		:= srcs/built_ins/
+DIR_PARSING			:= srcs/parsing/
+DIR_UTILS			:= srcs/utils/
 
-LIBFT		:=	libft/
-SRC 		:= 	src/minishell.c
+SRCS		=	$(DIR_BUILTINS)00_echo.c			$(DIR_BUILTINS)01_cd.c				\
+				$(DIR_BUILTINS)02_export.c			$(DIR_BUILTINS)03_unset.c			\
+				$(DIR_BUILTINS)04_pwd.c				$(DIR_BUILTINS)05_env.c				\
+																						\
+				$(DIR_PARSING))00_heredoc.c			$(DIR_PARSING)01_clean_input.c		\
+				$(DIR_PARSING)02_dollar_exp.c		$(DIR_PARSING)03_builtins.c			\
+				$(DIR_PARSING)04_checker_setup.c	$(DIR_PARSING)05_init_mshell.c		\
+				$(DIR_PARSING)06_init_utils.c		$(DIR_PARSING)07_execution.c		\
+				$(DIR_PARSING)08_exec_setup.c		$(DIR_PARSING)09_exec_utils.c		\
+				$(DIR_PARSING)10_signals.c												\
+																						\
+				$(DIR_UTILS)00_dollar_utils.c			$(DIR_UTILS)01_libft_00.c		\
+				$(DIR_UTILS)02_libft_01.c				$(DIR_UTILS)03_libft_02.c		\
+																						\
+				main.c
 
 #████████████████████████████ Rules ████████████████████████████████████████████#
 
-all:$(NAME)
+all:		$(NAME)
 
-$(NAME): 	$(SRC)
-				@echo "$(CYAN)Compiling $(NAME)...$(WHITE)"
-				@make re -C $(LIBFT) -s
-				@$(CC) $(CFLAGS) $(SRC) $(LIBFT)/libft.a -o $(NAME) $(AUXFLAGS)
-				@echo "$(GREEN)$(NAME) compiled! 🚀$(WHITE)\n"
+OBJ     = $(SRCS:.c=.o)
+
+$(NAME):	$(OBJ)
+				@$(CC) $(CFLAGS) -o $(NAME) $(OBJ) $(LDFLAGS)
+
+%.o: %.c
+				@$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-				@make -C $(LIBFT) clean -s
+				@rm -f $(OBJ)
 
 fclean: 	clean
-				@rm -rf $(NAME)
-				@make -C $(LIBFT) fclean -s
+				@rm -f $(NAME)
 
-re: 		fclean all
+re: 		fclean $(NAME)
 
-.PHONY: 	all clean fclean re normi 
+.PHONY:		all clean fclean re
 
 #█████████████████████████████ Custom rules ████████████████████████████████████#
 
 normi:
-						@echo "$(YELLOW)Norminette...\n$(WHITE)"
-						@norminette $(SRC)
-						@echo "$(GREEN)\nNorminette Done!\n"
+				@echo "Norminette...\n"
+				@norminette $(SRC)
+				@echo "nNorminette Done!\n"
 
 run:
-						clear					
-						@make re
-						@./minishell
+				clear
+				@make re
+				@./minishell
