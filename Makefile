@@ -5,69 +5,94 @@
 #                                                     +:+ +:+         +:+      #
 #    By: alex <alex@student.42.fr>                  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2024/04/03 19:29:16 by ahiguera          #+#    #+#              #
-#    Updated: 2024/09/12 15:52:06 by alex             ###   ########.fr        #
+#    Created: 2024/04/03 19:29:16 by alex              #+#    #+#              #
+#    Updated: 2026/06/29 00:00:00 by alex             ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-#████████████████████████████ Configuration ███████████████████████████████████#
+NAME			:= minishell
 
-NAME    	:= minishell
-CC      	:= gcc
-CFLAGS  	:= -Wall -Werror -Wextra -fsanitize=address -g3
-LDFLAGS 	:= -lreadline
+CC				:= cc
+CFLAGS			:= -Wall -Wextra -Werror
+RM				:= rm -f
 
-#█████████████████████████████ SOURCES █████████████████████████████████████████#
-DIR_BUILTINS		:= srcs/built_ins/
-DIR_PARSING			:= srcs/parsing/
-DIR_UTILS			:= srcs/utils/
+SRC_DIR			:= srcs
+LIBFT_DIR		:= libft
+LIBFT			:= $(LIBFT_DIR)/libft.a
 
-SRCS		=	$(DIR_BUILTINS)00_echo.c			$(DIR_BUILTINS)01_cd.c				\
-				$(DIR_BUILTINS)02_export.c			$(DIR_BUILTINS)03_unset.c			\
-				$(DIR_BUILTINS)04_pwd.c				$(DIR_BUILTINS)05_env.c				\
-																						\
-				$(DIR_PARSING)00_heredoc.c			$(DIR_PARSING)01_clean_input.c		\
-				$(DIR_PARSING)02_dollar_exp.c		$(DIR_PARSING)03_builtins.c			\
-				$(DIR_PARSING)04_checker_setup.c	$(DIR_PARSING)05_init_mshell.c		\
-				$(DIR_PARSING)06_init_utils.c		$(DIR_PARSING)07_execution.c		\
-				$(DIR_PARSING)08_exec_setup.c		$(DIR_PARSING)09_exec_utils.c		\
-				$(DIR_PARSING)10_signals.c												\
-																						\
-				$(DIR_UTILS)00_dollar_utils.c		$(DIR_UTILS)01_libft_00.c			\
-				$(DIR_UTILS)02_libft_01.c			$(DIR_UTILS)03_libft_02.c			\
-																						\
-				main.c
+# ----------------------------- readline -------------------------------------- #
+UNAME			:= $(shell uname)
+ifeq ($(UNAME), Darwin)
+	RL_PREFIX	:= $(shell brew --prefix readline)
+	CFLAGS		+= -I$(RL_PREFIX)/include
+	RL_FLAGS	:= -L$(RL_PREFIX)/lib -lreadline
+else
+	RL_FLAGS	:= -lreadline
+endif
 
-#████████████████████████████ Rules ████████████████████████████████████████████#
+# ----------------------------- sources --------------------------------------- #
+SRCS			:= \
+	$(SRC_DIR)/main.c \
+	$(SRC_DIR)/utils/loop_utils.c \
+	$(SRC_DIR)/utils/error.c \
+	$(SRC_DIR)/utils/cleanup.c \
+	$(SRC_DIR)/env/env_init.c \
+	$(SRC_DIR)/env/env_get.c \
+	$(SRC_DIR)/env/env_set.c \
+	$(SRC_DIR)/env/env_array.c \
+	$(SRC_DIR)/signals/signals.c \
+	$(SRC_DIR)/lexer/lexer.c \
+	$(SRC_DIR)/lexer/lex_word.c \
+	$(SRC_DIR)/lexer/lex_op.c \
+	$(SRC_DIR)/lexer/token.c \
+	$(SRC_DIR)/expand/expand.c \
+	$(SRC_DIR)/expand/expand_str.c \
+	$(SRC_DIR)/expand/expand_dollar.c \
+	$(SRC_DIR)/expand/expand_quote.c \
+	$(SRC_DIR)/expand/expand_utils.c \
+	$(SRC_DIR)/parser/parse.c \
+	$(SRC_DIR)/parser/parse_redir.c \
+	$(SRC_DIR)/parser/syntax.c \
+	$(SRC_DIR)/parser/cmd.c \
+	$(SRC_DIR)/exec/exec.c \
+	$(SRC_DIR)/exec/exec_pipe.c \
+	$(SRC_DIR)/exec/exec_child.c \
+	$(SRC_DIR)/exec/path.c \
+	$(SRC_DIR)/exec/redir.c \
+	$(SRC_DIR)/exec/heredoc.c \
+	$(SRC_DIR)/builtins/builtin.c \
+	$(SRC_DIR)/builtins/echo.c \
+	$(SRC_DIR)/builtins/pwd.c \
+	$(SRC_DIR)/builtins/env.c \
+	$(SRC_DIR)/builtins/cd.c \
+	$(SRC_DIR)/builtins/unset.c \
+	$(SRC_DIR)/builtins/exit.c \
+	$(SRC_DIR)/builtins/export.c \
+	$(SRC_DIR)/builtins/export2.c
 
-all:		$(NAME)
+OBJS			:= $(SRCS:.c=.o)
+HEADER			:= $(SRC_DIR)/minishell.h
 
-OBJ     = $(SRCS:.c=.o)
+# ----------------------------- rules ----------------------------------------- #
+all:			$(NAME)
 
-$(NAME):	$(OBJ)
-				@$(CC) $(CFLAGS) -o $(NAME) $(OBJ) $(LDFLAGS)
+$(NAME):		$(LIBFT) $(OBJS)
+				$(CC) $(CFLAGS) $(OBJS) $(LIBFT) $(RL_FLAGS) -o $(NAME)
 
-%.o: %.c
-				@$(CC) $(CFLAGS) -c $< -o $@
+$(LIBFT):
+				$(MAKE) -C $(LIBFT_DIR)
+
+%.o:			%.c $(HEADER)
+				$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-				@rm -f $(OBJ)
+				$(MAKE) -C $(LIBFT_DIR) clean
+				$(RM) $(OBJS)
 
-fclean: 	clean
-				@rm -f $(NAME)
+fclean:			clean
+				$(MAKE) -C $(LIBFT_DIR) fclean
+				$(RM) $(NAME)
 
-re: 		fclean all
+re:				fclean all
 
-.PHONY:		all clean fclean re
-
-#█████████████████████████████ Custom rules ████████████████████████████████████#
-
-normi:
-				@echo "Norminette...\n"
-				@norminette $(SRC)
-				@echo "nNorminette Done!\n"
-
-run:
-				clear
-				@make re
-				@./minishell
+.PHONY:			all clean fclean re

@@ -3,37 +3,86 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: alex <alex@student.42.fr>                   #+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/02 20:20:59 by marvin            #+#    #+#             */
-/*   Updated: 2024/09/02 20:20:59 by marvin           ###   ########.fr       */
+/*   Created: 2026/06/29 00:00:00 by alex              #+#    #+#             */
+/*   Updated: 2026/06/29 00:00:00 by alex             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	main(int argc, char **argv, char **envp)
-{
-	char	*pre_input;
-	char	*clean_input;
+volatile sig_atomic_t	g_signal = 0;
 
-	pre_input = NULL;
-	clean_input = NULL;
-	ft_signal_handler();
-	if (argc == 2 || argv[1])
-		return (0);
+void	process_line(t_shell *sh, char *line)
+{
+	t_token	*toks;
+
+	sh->line = line;
+	sh->cmds = NULL;
+	toks = NULL;
+	if (has_content(line))
+	{
+		toks = lex(line);
+		if (!toks)
+		{
+			cmd_error("syntax error", "unclosed quotes");
+			sh->exit_status = 2;
+		}
+	}
+	if (toks)
+	{
+		expand_tokens(sh, toks);
+		sh->cmds = parse(toks);
+		token_clear(&toks);
+		if (sh->cmds)
+			execute(sh, sh->cmds);
+		else
+			sh->exit_status = 2;
+	}
+	cleanup_after(sh);
+}
+
+void	shell_loop(t_shell *sh)
+{
+	char	*line;
+
 	while (1)
 	{
-		pre_input = readline("minichel-> ");
-		if (!pre_input)
+		setup_signals_interactive();
+		line = readline(PROMPT);
+		if (g_signal == SIGINT)
+		{
+			sh->exit_status = 130;
+			g_signal = 0;
+		}
+		if (!line)
+		{
+			ft_putendl_fd("exit", 1);
 			break ;
-		ft_heredoc(&pre_input);
-		add_history(pre_input);
-		clean_input = ft_clean_input(pre_input);
-		if (ft_builtin(clean_input, envp) == 0)
-			ft_init_minishell(clean_input, envp);
-		free(clean_input);
-		free(pre_input);
+		}
+		if (*line)
+			add_history(line);
+		process_line(sh, line);
 	}
-	return (0);
+}
+
+int	main(int ac, char **av, char **envp)
+{
+	t_shell	sh;
+
+	(void)av;
+	if (ac != 1)
+	{
+		ft_putendl_fd("minishell: no arguments expected", 2);
+		return (1);
+	}
+	sh.env = env_init(envp);
+	sh.cmds = NULL;
+	sh.line = NULL;
+	sh.exit_status = 0;
+	shell_loop(&sh);
+	env_clear(&sh.env);
+	rl_clear_history();
+	return (sh.exit_status);
 }
