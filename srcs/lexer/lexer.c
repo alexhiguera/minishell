@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alex <alex@student.42.fr>                   #+  +:+       +#+        */
+/*   By: alex <alex@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/29 00:00:00 by alex              #+#    #+#             */
 /*   Updated: 2026/06/29 00:00:00 by alex             ###   ########.fr       */
@@ -24,6 +24,12 @@ static int	skip_spaces(char *line, int i)
 	return (i);
 }
 
+static void	*lex_fail(t_token **toks)
+{
+	token_clear(toks);
+	return (NULL);
+}
+
 t_token	*lex(char *line)
 {
 	t_token	*toks;
@@ -39,15 +45,10 @@ t_token	*lex(char *line)
 		if (line[i] == '|' || line[i] == '<' || line[i] == '>')
 		{
 			if (!add_operator(line, &i, &toks))
-				break ;
+				return (lex_fail(&toks));
 		}
 		else if (!add_word(line, &i, &toks))
-			break ;
-	}
-	if (line[i])
-	{
-		token_clear(&toks);
-		return (NULL);
+			return (lex_fail(&toks));
 	}
 	return (toks);
 }
