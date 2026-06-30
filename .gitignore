@@ -59,3 +59,5 @@ aout
 out
 .vscode
 minishell
+# bonus build marker
+.bonus

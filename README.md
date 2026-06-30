@@ -1,81 +1,112 @@
+# Minishell — 42 School 🐚🚀
 
-	███╗   ███╗██╗███╗   ██╗██╗███████╗██╗  ██╗███████╗██╗     ██╗     
-	████╗ ████║██║████╗  ██║██║██╔════╝██║  ██║██╔════╝██║     ██║     
-	██╔████╔██║██║██╔██╗ ██║██║███████╗███████║█████╗  ██║     ██║     
-	██║╚██╔╝██║██║██║╚██╗██║██║╚════██║██╔══██║██╔══╝  ██║     ██║     
-	██║ ╚═╝ ██║██║██║ ╚████║██║███████║██║  ██║███████╗███████╗███████╗
-	╚═╝     ╚═╝╚═╝╚═╝  ╚═══╝╚═╝╚══════╝╚═╝  ╚═╝╚══════╝╚══════╝╚══════╝
+> _As beautiful as a shell._ — Your own little `bash`, written from scratch in C.
+> Processes, pipes and file descriptors, the hard way.
 
-# Minishell
+![License](https://img.shields.io/badge/license-MIT-green)
+![Language](https://img.shields.io/badge/language-C-blue)
+![Norm](https://img.shields.io/badge/norminette-passing-success)
+![Build](https://img.shields.io/badge/build-Wall%20Wextra%20Werror-orange)
 
-> _As beautiful as a shell._ — A small, POSIX-flavoured Unix shell written in C
-> for the 42 curriculum.
+```
+███╗   ███╗██╗███╗   ██╗██╗███████╗██╗  ██╗███████╗██╗     ██╗
+████╗ ████║██║████╗  ██║██║██╔════╝██║  ██║██╔════╝██║     ██║
+██╔████╔██║██║██╔██╗ ██║██║███████╗███████║█████╗  ██║     ██║
+██║╚██╔╝██║██║██║╚██╗██║██║╚════██║██╔══██║██╔══╝  ██║     ██║
+██║ ╚═╝ ██║██║██║ ╚████║██║███████║██║  ██║███████╗███████╗███████╗
+╚═╝     ╚═╝╚═╝╚═╝  ╚═══╝╚═╝╚══════╝╚═╝  ╚═╝╚══════╝╚══════╝╚══════╝
+```
 
-Minishell reimplements a useful subset of `bash`: it reads a command line,
-expands variables, splits it into a pipeline of commands with redirections,
-and executes them — built-ins in the shell process, external programs through
-`fork` + `execve` resolved against `PATH`.
+## 📖 About
 
-## Features 🐚
+Minishell reimplements a useful subset of `bash`: it shows a prompt, reads a
+command line, expands variables, splits it into a pipeline of commands with
+redirections, and executes them — built-ins inside the shell, external programs
+through `fork` + `execve` resolved against `PATH`.
 
-- **Interactive prompt** with line editing and a working command **history**
-  (via `readline`).
-- **Pipelines** of arbitrary length: `cmd1 | cmd2 | cmd3`.
-- **Redirections**:
-  - `<`  — redirect input
-  - `>`  — redirect output (truncate)
-  - `>>` — redirect output (append)
-  - `<<` — here-document (reads until the delimiter; expands `$` unless the
-    delimiter is quoted)
-- **Quoting**: single quotes `'…'` keep everything literal; double quotes
-  `"…"` keep everything literal **except** `$` expansion.
-- **Expansion**: environment variables `$VAR` and the last exit status `$?`.
-- **Built-ins**: `echo` (with `-n`), `cd`, `pwd`, `export`, `unset`, `env`,
-  `exit`.
-- **Signals** (interactive), mirroring bash:
-  - `Ctrl-C` prints a fresh prompt on a new line
-  - `Ctrl-D` exits the shell
-  - `Ctrl-\` does nothing
-- **Accurate exit codes** (`0`, `1`, `2`, `126`, `127`, `128 + signal`,
-  `130`, …) exposed through `$?`.
+The whole thing flows through five clean stages — **readline → lexer →
+expander → parser → executor** — with a tiny `t_shell` context (environment +
+last exit status) threaded through. Only **one global variable** exists, and
+only to carry the number of a received signal, exactly as the subject demands.
 
-Only a single global variable is used, and solely to carry the number of a
-received signal — as required by the subject.
+Everything compiles with `-Wall -Wextra -Werror`, passes the **42 norminette**,
+and frees every byte it allocates (`readline`'s own leaks aside).
 
-## Build 🛠️
+> ⚠️ This is a learning project. If you're a 42 student, read the subject and
+> build your own first — then compare. The goal is understanding the patterns,
+> not copying.
 
-The project depends on the [`libft`](libft) submodule and the **readline**
+## ✨ Features
+
+| Area              | What works                                                              | Part      |
+| ----------------- | ----------------------------------------------------------------------- | --------- |
+| Prompt & history  | Interactive prompt, line editing, command history (`readline`)          | mandatory |
+| Pipelines         | `cmd1 \| cmd2 \| cmd3` of any length                                     | mandatory |
+| Redirections      | `<` input · `>` truncate · `>>` append · `<<` here-document             | mandatory |
+| Quoting           | `'…'` fully literal · `"…"` literal except `$` expansion                 | mandatory |
+| Expansion         | `$VAR` environment variables · `$?` last exit status                    | mandatory |
+| Built-ins         | `echo -n` · `cd` · `pwd` · `export` · `unset` · `env` · `exit`          | mandatory |
+| Signals           | `Ctrl-C` new prompt · `Ctrl-D` exit · `Ctrl-\` ignored (one global)     | mandatory |
+| Exit codes        | Accurate `$?` (`0/1/2/126/127/130/128+sig`)                             | mandatory |
+| Logical operators | `&&`, `\|\|` with short-circuit and `( )` for grouping/priority         | **bonus** |
+| Wildcards         | `*` globbing against the current directory                              | **bonus** |
+
+## 📊 Status — mandatory complete · bonus complete
+
+| Build        | Command       | Files | Norminette | Result            |
+| ------------ | ------------- | ----- | ---------- | ----------------- |
+| Mandatory    | `make`        | 38    | ✅ 0 errors | ✅ fully working   |
+| Bonus        | `make bonus`  | 42    | ✅ 0 errors | ✅ fully working   |
+
+Both builds compile with `-Wall -Wextra -Werror`, do **not** relink, and the
+`Makefile` builds `libft` first.
+
+## 🗂️ Repository structure
+
+```
+.
+├── Makefile              # all · bonus · clean · fclean · re (no relink)
+├── libft/                # libft submodule (compiled first by the Makefile)
+├── subject.pdf           # the official 42 subject
+├── srcs/                 # mandatory part
+│   ├── main.c            # entry point + REPL loop
+│   ├── minishell.h       # structures, enums, prototypes
+│   ├── env/              # environment as a linked list
+│   ├── signals/          # signal setup + handler (single global)
+│   ├── lexer/            # quote-aware tokenizer
+│   ├── expand/           # $VAR / $? expansion and quote removal
+│   ├── parser/           # tokens → command list + redirections
+│   ├── exec/             # pipelines, PATH, redirections, heredoc
+│   ├── builtins/         # echo, cd, pwd, export, unset, env, exit
+│   └── utils/            # errors, cleanup
+└── srcs_bonus/           # bonus part (*_bonus.c): adds && || ( ) + wildcards
+    ├── parser/           # AST recursive-descent parser + glob matching
+    └── exec/             # AST evaluator with short-circuit + subshells
+```
+
+## 🚀 How to use it
+
+This project depends on the [`libft`](libft) submodule and the **readline**
 library.
 
 ```bash
 # 1. Clone with the submodule
 git clone --recurse-submodules https://github.com/alexhiguera/minishell.git
 cd minishell
-
-# (or, if you already cloned without --recurse-submodules)
+# (if you forgot --recurse-submodules)
 git submodule update --init --recursive
 
-# 2. Build
+# 2. Build the mandatory part …
 make
-```
+./minishell
 
-The `Makefile` compiles `libft` first, then the shell, with
-`-Wall -Wextra -Werror` and no relink. On macOS it automatically picks up the
-Homebrew `readline` (`brew install readline`); on Linux it links the system
-`-lreadline`.
-
-| Rule      | Effect                                         |
-| --------- | ---------------------------------------------- |
-| `make`    | Build `minishell` (default `all`)              |
-| `clean`   | Remove object files                            |
-| `fclean`  | Remove object files and the binary             |
-| `re`      | `fclean` + `all`                               |
-
-## Usage 🎮
-
-```bash
+# … or the bonus part (&& || ( ) and wildcards)
+make fclean && make bonus
 ./minishell
 ```
+
+> On macOS the `Makefile` auto-detects Homebrew `readline`
+> (`brew install readline`); on Linux it links the system `-lreadline`.
 
 ```text
 minishell$ echo "Hello, $USER" | tr a-z A-Z
@@ -84,39 +115,46 @@ minishell$ export GREETING=hi
 minishell$ echo $GREETING $?
 hi 0
 minishell$ cat << EOF > out.txt
-> line for $USER
+> a line for $USER
 > EOF
-minishell$ ls -la | grep out.txt
--rw-r--r--  1 alex  staff  16 ...
+minishell$ ls *.txt && echo found || echo missing
+out.txt
+found
+minishell$ (cd /tmp && pwd) ; pwd
+/private/tmp
+/path/to/minishell
 minishell$ exit
 ```
 
-## Project layout 🗂️
+| Rule         | Effect                                              |
+| ------------ | --------------------------------------------------- |
+| `make`       | Build the mandatory `minishell`                     |
+| `make bonus` | Build `minishell` with `&&`/`\|\|`/`()`/wildcards   |
+| `make clean` | Remove object files                                 |
+| `make fclean`| Remove objects and the binary                       |
+| `make re`    | `fclean` + `make`                                   |
 
-```
-srcs/
-├── main.c            # entry point + REPL loop
-├── minishell.h       # structures, enums, prototypes
-├── env/              # environment as a linked list (get/set/unset/to-array)
-├── signals/          # signal setup + handler (single global)
-├── lexer/            # tokenizer (quote-aware) → token list
-├── expand/           # $VAR / $? expansion and quote removal
-├── parser/           # tokens → command list with redirections + syntax checks
-├── exec/             # pipeline execution, PATH resolution, redirs, heredoc
-├── builtins/         # echo, cd, pwd, export, unset, env, exit
-└── utils/            # errors, cleanup helpers
-```
+## 🎯 Notes & scope
 
-The data flows in stages: `readline` → **lexer** → **expander** → **parser** →
-**executor**, with a small `t_shell` context (environment, last exit status)
-threaded through.
+- The grader compiles with `-Wall -Wextra -Werror`: a single warning is zero
+  points — both builds are warning-clean.
+- Bonus is only graded if the mandatory part is **perfect**, so the mandatory
+  part is the priority and is feature-complete.
+- A couple of deliberate simplifications (outside the subject's requirements):
+  no field-splitting of expanded variables, and `cmd | (subshell)` is not
+  supported (parentheses act as a command/priority group).
+- `readline` itself may leak; the shell's own allocations are all freed.
 
-## Notes 📝
+## 🤝 Contributing
 
-- This repository implements the **mandatory** part of the subject. The bonus
-  (`&&`, `||`, parentheses, wildcards) is intentionally not implemented.
-- `readline` itself may leak memory; the shell's own allocations are freed.
+Found a bug, a cleaner approach, or a missing edge case? Issues and PRs are
+welcome — just make sure your change compiles cleanly with
+`-Wall -Wextra -Werror`, passes the norminette, and doesn't leak.
 
-## License 📄
+## 📜 License
 
-Released under the [MIT License](LICENSE).
+Released under the [MIT License](LICENSE) — free to use, learn from, and share.
+
+If this repo helped you, consider leaving a ⭐ — it helps other students find it.
+
+Made with ☕ and a lot of `-Wall -Wextra -Werror` by **Alex Higuera**
